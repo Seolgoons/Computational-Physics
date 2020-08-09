@@ -1,0 +1,120 @@
+'''
+2020 08 01 Seolgoon
+G M K 연결 시키는 코드
+'''
+import os
+
+reading_file = open('z1.txt', 'r')
+z1_list = reading_file.read()
+reading_file = open('z2.txt', 'r')
+z2_list = reading_file.read()
+reading_file = open('z3.txt', 'r')
+z3_list = reading_file.read()
+
+z1_list = z1_list.split()
+z2_list = z2_list.split()
+z3_list = z3_list.split()
+# z1, z2, z3 파일을 모두 빈칸, 줄 다 없애서 리스트 화 된거임
+
+del z1_list[0]
+del z1_list[0]
+del z2_list[0]
+del z2_list[0]
+del z3_list[0]
+del z3_list[0]
+# kval, tot 지움
+
+z1_list_separated = []
+z2_list_separated = []
+z3_list_separated = []
+
+for i in range(int(len(z1_list)/60)):
+    temp_list = []
+    for j in range(60):
+        temp_list.append(z1_list[i*60 + j])
+    z1_list_separated.append(temp_list)
+for i in range(int(len(z2_list)/60)):
+    temp_list = []
+    for j in range(60):
+        temp_list.append(z2_list[i*60 + j])
+    z2_list_separated.append(temp_list)
+for i in range(int(len(z3_list)/60)):
+    temp_list = []
+    for j in range(60):
+        temp_list.append(z3_list[i*60 + j])
+    z3_list_separated.append(temp_list)
+# z1, z2, z3 리스트를 깔끔하게 분리하여 새로 만듦
+
+Gvalue = float(z1_list_separated[0][54]) # 0.1933883
+for i in range(len(z2_list_separated)):
+    for j in range(int( (len(z2_list_separated[i])) / 6)):
+            k = float(z2_list_separated[i][j*6]) + Gvalue
+            z2_list_separated[i][j*6] = str('%.7f' % k)
+# z2에 z1값 더한거
+
+Mvalue = float(z2_list_separated[0][54])
+for i in range(len(z3_list_separated)):
+    for j in range(int( (len(z3_list_separated[i])) / 6)):
+            k = float(z3_list_separated[i][j*6]) + Mvalue
+            z3_list_separated[i][j*6] = str('%.7f' % k)
+# z3에 z2값 더한거
+
+
+final_list = []
+final_list = z1_list_separated + z2_list_separated + z3_list_separated
+
+
+for i in range(int(len(final_list))):
+    for j in [5, 11, 17, 23, 29, 35, 41, 47, 53, 59]:
+        final_list[i][j] = final_list[i][j] + '\n'
+
+###############################
+
+numberlist = []
+for i in range(0, 60):
+    numberlist.append(i)
+numberlist = list(set(numberlist) - {0, 6, 12, 18, 24, 30, 36, 42, 48, 54} - {5, 11, 17, 23, 29, 35, 41, 47, 53, 59})
+
+for i in range(len(final_list)):
+    for j in range(len(final_list[i])):
+        if j in [0, 6, 12, 18, 24, 30, 36, 42, 48, 54]:
+            final_list[i][j] = ' ' * (14-len(final_list[i][j])) + final_list[i][j]
+        
+        elif j in [5, 11, 17, 23, 29, 35, 41, 47, 53, 59]:
+            final_list[i][j] = ' ' * (18-len(final_list[i][j])) + final_list[i][j]
+        elif j in numberlist:
+            final_list[i][j] = ' ' * (17-len(final_list[i][j])) + final_list[i][j]
+            
+
+with open('newfile.txt', 'w') as f:
+    f.write(' #kval, total\n')
+    for i in range(int(len(final_list))):
+        final_list[i][59] = final_list[i][59] + '\n'
+        f.writelines(final_list[i])
+            
+
+
+
+# newfile = open('newfile.txt', 'w')
+# # newfile.write(' #kval, total\n')
+# for i in range(len(final_list)):
+#     newfile.write('\n'.join(final_list[i]))  # 텍스트에 한 번 써보자
+# newfile.close()
+
+# reading_file = open('newfile.txt', 'r')
+# newlist = reading_file.readlines()
+# for i in range(len(newlist)):
+#     newlist[i] = newlist[i].rstrip('\n')
+
+
+# for i in range(int((len(newlist)+1) / 10)):
+#     newlist[i*6] = '\n' + newlist[i*6]
+
+# newlist[0] = newlist[0].rstrip('\n')
+
+
+
+# with open('newfile.txt', 'w') as f:
+#     for line in newlist:
+#         f.write(line)
+
